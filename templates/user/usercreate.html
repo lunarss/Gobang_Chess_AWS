@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{title}}</title>
+    </head>
+    <body>
+        <h1>{{title}}</h1>
+
+        <div>
+            <a href = "{{url_for('login')}}">Back to login page</a>
+        </div>
+    
+        <form action = "{{url_for('user_signup')}}" method = "post">
+
+            <div>
+                <label>Username</label>
+            </div>
+            <div>
+                <input type="text" name="username" value="{{username if username != None}}">
+            </div>
+    
+            <div>
+                <label>Email address</label>
+            </div>
+            <div>
+                <input type="text" name="email_address" value="{{email_address if email_address != None}}">
+            </div>
+    
+            <div>
+                <input type = "submit" value = "Signup">
+                <input type = "reset">
+            </div>
+        </form>
+        <div class="error">{{error_msg if error_msg != None}}</div>
+    </body>
+
+</html>
+    

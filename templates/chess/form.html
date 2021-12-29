@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>gobang</title>
+    <style type="text/css">
+    canvas{
+        display: block;
+        margin: 0px auto;
+        /*box-shadow: -2px -2px 2px #F3F2F2, 5px 5px 5px #6F6767;*/
+    }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="900px" height="900px"></canvas>
+    <script type="text/javascript">
+    // var history_map = "{{history_map}}";
+    var chess = document.getElementById("canvas");
+    var context = chess.getContext('2d');
+    var me = true;
+    var chessStatus = "{{current_map_str}}";// store status of chesses
+    var chessBox = [];
+    drawChessBoard();// render chess board
+    // console.log(chessBox)
+    for(var i=0;i<15;i++){
+        chessBox[i]=[];
+        for(var j=0;j<15;j++){
+            chessBox[i][j]=chessStatus.split(",")[15*j+i];
+            if(parseInt(chessBox[i][j]) == 1){
+                context.beginPath();
+                context.arc(30+i*60,30+j*60,20,0,2*Math.PI);// render chesses
+                var g=context.createRadialGradient(30+i*60,30+j*60,20,30+i*60,30+j*60,0);// set fading
+                g.addColorStop(0,'#0A0A0A');// black chess
+                g.addColorStop(1,'#636766');
+                context.fillStyle=g;
+                context.fill();
+                context.closePath();
+            } else if(parseInt(chessBox[i][j]) == 2){
+                context.beginPath();
+                context.arc(30+i*60,30+j*60,20,0,2*Math.PI);// render chesses
+                var g=context.createRadialGradient(30+i*60,30+j*60,20,30+i*60,30+j*60,0);// set fading
+                g.addColorStop(0,'#D1D1D1');// white chess
+                g.addColorStop(1,'#F9F9F9');
+                context.fillStyle=g;
+                context.fill();
+                context.closePath();
+            }
+        }
+    }
+    
+    function drawChessBoard(){
+        for(var i=0;i<15;i++){
+            context.strokeStyle="#D6D1D1";
+            context.moveTo(30+i*60,30);//render 15 lines vertically，with gap of 30px;
+            context.lineTo(30+i*60,870);
+            context.stroke();
+            context.moveTo(30,30+i*60);//render 15 lines horizontally，with gap of 30px;chess board is 14*14；
+            context.lineTo(870,30+i*60);
+            context.stroke();
+        }
+    }
+    
+    function oneStep(i,j,k){
+        context.beginPath();
+        context.arc(30+i*60,30+j*60,20,0,2*Math.PI);// render chesses
+        var g=context.createRadialGradient(30+i*60,30+j*60,20,30+i*60,30+j*60,0);// set fading
+        if(k) {    //k=true is black chess，otherwise white chess
+            g.addColorStop(0,'#0A0A0A');// black chess
+            g.addColorStop(1,'#636766');
+        }else {
+            g.addColorStop(0,'#D1D1D1');// white chess
+            g.addColorStop(1,'#F9F9F9');
+        }
+        context.fillStyle=g;
+        context.fill();
+        context.closePath();
+    }
+    
+    chess.onclick=function(e){
+        var x = e.offsetX;// x axis related to upper left corner of the board
+        var y = e.offsetY;// y axis related to upper left corner of the board
+        var column = Math.floor(x/60);
+        var row = Math.floor(y/60);
+        if( parseInt(chessBox[column][row]) == 0 ) {
+            oneStep(column,row,me);
+            chessBox[column][row]="1";
+            var chessStatusNew = [];
+            for(var i=0;i<15;i++){
+                chessStatusNew[i]=[];
+                for(var j=0;j<15;j++){
+                    chessStatusNew[i][j] = chessBox[j][i]
+                }
+            }
+            chessStatusNew.join(",") 
+            document.getElementById("current_map_str").value = chessStatusNew;
+            // if(me){
+            //     chessBox[i][j]="1";
+            // }else{
+            //     chessBox[i][j]="2";
+            // }
+            // me=!me;// put down a white chess
+            
+            document.getElementById("column").value = column;
+            document.getElementById("row").value = row;
+            // document.getElementById("chessBox").value = chessBox;
+        }
+    };
+    </script>
+    
+    <form action='{{url_for("user_step")}}' method="GET">
+        <input type="hidden" name="column" id="column" value=""/>
+        <input type="hidden" name="row" id="row" value=""/>
+        <input type="hidden" name="current_map_str" id="current_map_str" value=""/>
+   	    Press "confirm" to continue after your step. <input type="submit" value="Confirm">
+    </form>
+    </br>
+    <form action='{{url_for("replay_game")}}' method="GET">
+   	    Press "Replay" to replay the game. <input type="submit" value="Replay">
+    </form>
+    
+</body>
+</html>

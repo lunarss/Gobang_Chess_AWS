@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Main Page</title>
+    </head>
+    <body>
+        <h1>Home</h1>
+
+        <div class="error">{{error_msg if error_msg != None}}</div>
+
+        <ul>
+            <li>
+                <form action = "{{url_for('user_list')}}" method = "get">
+                    <input type = "submit" value = "User Management">
+                </form>
+            </li>
+
+            <li>
+                <form action = "{{url_for('password_change')}}" method = "get">
+                    <input type = "submit" value = "Change your password">
+                </form>
+            </li>
+			
+			<li><a href="{{url_for('chess_game')}}">Chess Game</a></li>
+
+            <li>
+            <form action = "{{url_for('logout')}}">
+                <input type = "submit" value = "Logout">
+            </form>
+            </li>
+        </ul>
+
+
+    </body>
+
+</html>
+
+<script type = "text/javascript">
+function disableButton(form)
+{
+    form.SubmitButton.disabled = true;
+    return true;
+}
+</script>
